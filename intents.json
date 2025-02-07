@@ -1,0 +1,72 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Hi",
+        "Hey",
+        "How are you",
+        "Is anyone there?",
+        "Hello",
+        "Good day"
+      ],
+      "responses": [
+        "Hey :-)",
+        "Hello, thanks for choosing our service!",
+        "Hi there, what can I do for you?",
+        "Hi there, how can I help?"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["Bye", "See you later", "Goodbye"],
+      "responses": [
+        "See you later!",
+        "Have a nice day!",
+        "Bye! Come back again soon."
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": ["Thanks", "Thank you", "That's helpful", "Thank's a lot!"],
+      "responses": ["Happy to help!", "Any time!", "My pleasure"]
+    },
+    {
+      "tag": "places",
+      "patterns": [
+        "I want to visit popular places of Kazakhstan",
+        "What kinds of places you can suggest?",
+        "What is the most interesting cities to travel?"
+      ],
+      "responses": [
+        "I can suggest to visit Almaty, Astana, Taraz, Turkistan, Aktau, Semei",
+        "Bozjyra is a great place to visit",
+        "Well, you can visit Kayindi"
+      ]
+    },
+    {
+      "tag": "prices",
+      "patterns": [
+        "How much it will cost?",
+        "What is the optimal price for this travel?",
+        "Will there be any discount?"
+      ],
+      "responses": [
+        "Usually it cost 500$",
+        "My calculations show that it will cost 500$"
+      ]
+    },
+    {
+      "tag": "funny",
+      "patterns": [
+        "Tell me a joke!",
+        "Tell me something funny!",
+        "Do you know a joke?"
+      ],
+      "responses": [
+        "Why did the hipster burn his mouth? He drank the coffee before it was cool.",
+        "What did the buffalo say when his son left for college? Bison."
+      ]
+    }
+  ]
+}
