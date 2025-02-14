@@ -1,50 +1,53 @@
-import random
-import json
-import torch
-from model import NeuralNet
-from nltk_utils import bag_of_words, tokenize
+"""
+Install an additional SDK for JSON schema support Google AI Python SDK
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+$ pip install google.ai.generativelanguage
+"""
 
-with open('intents.json', 'r') as f:
-    intents = json.load(f)
+import os
+import google.generativeai as genai
+from google.ai.generativelanguage_v1beta.types import content
 
-FILE = "data.pth"
-data = torch.load(FILE)
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-input_size = data["input_size"]
-hidden_size = data["hidden_size"]
-output_size = data["output_size"]
-all_words = data['all_words']
-tags = data['tags']
-model_state = data["model_state"]
+with open('instruction.txt', 'r') as f:
+        system_instruction = f.read()
 
-model = NeuralNet(input_size, hidden_size, output_size).to(device)
-model.load_state_dict(model_state)
-model.eval()
+# Create the model
+generation_config = {
+  "temperature": 0.8,
+  "top_p": 0.95,
+  "top_k": 40,
+  "max_output_tokens": 4096,
+  "response_mime_type": "text/plain",
+}
 
-bot_name = "Jeruiq"
-print("Let's chat! (type 'quit' to exit)")
+model = genai.GenerativeModel(
+  model_name="gemini-2.0-flash",
+  generation_config=generation_config,
+  system_instruction=system_instruction,
+  # Google Search as a tool is not available in this version of the SDK.
+  # Please try the new genAI SDK (https://ai.google.dev/gemini-api/docs/sdks)
+  # and see the docs here (https://ai.google.dev/gemini-api/docs/grounding?lang=python#search-tool)
+)
+
+history = []
+
+print("Jeruyiq: Hello! How can I help you today?")
+
 while True:
-    sentence = input("You: ")
-    if sentence == "quit":
-        break
 
-    sentence = tokenize(sentence)
-    X = bag_of_words(sentence, all_words)
-    X = X.reshape(1, X.shape[0])
-    X = torch.from_numpy(X).to(device)
+    user_input = input("You: ")
 
-    output = model(X)
-    _, predicted = torch.max(output, dim=1)
-    tag = tags[predicted.item()]
+    chat_session = model.start_chat(
+        history=history,
+    )
 
-    probs = torch.softmax(output, dim=1)
-    prob = probs[0][predicted.item()]
+    response = chat_session.send_message(user_input)
 
-    if prob.item() > 0.75:
-        for intent in intents['intents']:
-            if tag == intent["tag"]:
-                print(f"{bot_name}: {random.choice(intent['responses'])}")
-    else:
-        print(f"{bot_name}: I do not understand...")
+    model_response = response.text
+
+    print(f'Jeruyiq: {model_response}')
+
+    history.append({"role": "user", "parts": [user_input]})
+    history.append({"role": "model", "parts": [model_response]})
