@@ -1,1 +1,1 @@
-# jeruiq-basic-algorithm
+# Welcome to Jeruyiq
